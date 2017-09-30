@@ -30,3 +30,12 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
   }));
 });
+
+describe('getDate', () => {
+  const myComponent = TestBed.createComponent(AppComponent);
+
+  it('should have a date', () => {
+    expect(myComponent).toBeDefined();
+});
+
+});
