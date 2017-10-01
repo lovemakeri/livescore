@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   myLeague : number;
   event : Event;
   events : Event[];
-  search : Search;
+  selectedSearch : Search;
   searches : Search[];
   todo : FormGroup;
 
@@ -81,87 +81,17 @@ ngOnInit(): void {
       leagues => {
           
           this.leagues = leagues;
-          this.isRequesting = false;
+          this.stopRefreshing();
      }, 
       err => {
            console.log(err);
+           this.stopRefreshing();
       });
 
 
   } 
 
-  getDate() : string
-  {
   
-  var today = new Date();
-var dd = today.getDate();
-
-var mm = today.getMonth()+1; //January is 0!
-
-var yyyy = today.getFullYear();
-
-this.todayDate = yyyy + '-' + mm + '-' + dd;
-
-if(dd<10) {
-var dd1 = '0'+dd;
-this.todayDate = yyyy + '-' + mm + '-' + dd1;
-} 
-
-if(mm<10) {
-var mm1 = '0'+mm;
-this.todayDate = yyyy + '-' + mm1 + '-' + dd;
-} 
-
-if((mm<10)&&(dd<10)) {
-this.todayDate = yyyy + '-' + mm1 + '-' + dd1;
-}
-
-return this.todayDate;
-}
-
-
-getTime() : string
-{
-
-var today = new Date();
-var hh = today.getHours();
-
-var mm = today.getMinutes(); 
-
-var ss = today.getSeconds();
-
-var time = hh + ':' + mm + ':' + ss;
-
-if(hh<10) {
-var hh1 = '0'+hh;
-time = hh1 + ':' + mm + ':' + ss;
-} 
-
-if(mm<10) {
-var mm1 = '0'+mm;
-time = hh + ':' + mm1 + ':' + ss;
-} 
-
-if(ss<10) {
-  var ss1 = '0'+ss;
-  time = hh + ':' + mm + ':' + ss1;
-  } 
-
-if((mm<10)&&(ss<10)) {
-time = hh + ':' + mm1 + ':' + ss1;
-}
-
-if((hh<10)&&(mm<10)) {
-  time = hh1 + ':' + mm1 + ':' + ss;
-  }
-
-
-if((hh<10)&&(ss<10)) {
-  time = hh1 + ':' + mm + ':' + ss1;
-  }
-
-return time;
-}
 
   searchForm() : void
   {
@@ -173,16 +103,15 @@ if(!this.searches)
 this.searches = new Array<Search>();
 }
 
-this.search = new Search();
-this.search.id = this.searches.length +1;
-this.search.time = this.getTime();
+this.selectedSearch = new Search();
+this.selectedSearch.id = this.searches.length +1;
+this.selectedSearch.time = this.apiService.getTime();
 
 var date_from;
 var date_to;
 
 if(!this.match_date_from)
 {
-//  this.match_date_from = this.getDate();
 date_from = "2016-01-01";
 } else 
 {
@@ -191,16 +120,22 @@ date_from = "2016-01-01";
 
 if(!this.match_date_to)
 {
-// this.match_date_to = this.getDate();
-date_to = this.getDate();
+date_to = this.apiService.getDate();
 } else 
 {
   date_to = this.match_date_to;
 }
 
-    this.apiService.getEvents(date_from, date_to, this.myLeague).then(events=>{ this.search.events = events;
-      this.searches.push(this.search); this.stopRefreshing()
-    });  
+    this.apiService.getEvents(date_from, date_to, this.myLeague).then(events=>{ this.selectedSearch.events = events;
+      this.searches.push(this.selectedSearch); this.stopRefreshing();
+    }).catch(error => {
+     
+          console.log(error.status);
+          console.log(error.error); // error message as string
+          console.log(error.headers);
+          this.stopRefreshing();
+        });
+     
  
 
   }
@@ -214,7 +149,7 @@ date_to = this.getDate();
   {
     let indexOfSearch = this.searches.indexOf(search);
 
-    this.search = this.searches[indexOfSearch]
+    this.selectedSearch = this.searches[indexOfSearch]
 
   }
 
