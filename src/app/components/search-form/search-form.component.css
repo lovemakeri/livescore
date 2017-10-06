@@ -1,0 +1,96 @@
+label{
+    font-weight: bold;
+}
+
+.countries, .leagues, .date, button, a.butn
+{
+float: left;
+display: block;
+margin: 10px;
+}
+
+a.butn
+{
+    border: 1px solid #000000;
+    padding: 5px;
+}
+
+.clr
+{
+    float: none;
+    clear: both;
+}
+
+.events
+{
+
+    border: 1px solid #000000;
+      
+
+}
+
+.searchTab, .selected
+{
+    float: left;
+    display: block;
+    padding: 10px;
+    border: 1px solid #000000;
+
+    width: 200px;
+    cursor: pointer;
+    
+}
+
+.searches
+{
+    margin: 0 auto;
+    text-align: center;
+
+}
+
+
+tr td, tr th
+{
+padding: 10px;
+
+ width: 115px; 
+
+}
+
+th {
+    border-bottom: 1px solid #000000;   
+}
+
+.events-search
+{
+  
+    
+    border-bottom: 1px solid #000000;
+}
+
+table.events-search
+{
+border: 1px solid #000000;
+}
+
+.selected
+{
+
+    font-weight: bold;
+    background-color: #F7D6D6;
+    cursor: default;
+
+}
+
+.spinner
+{
+
+    width: 441px;
+    height: 291px;
+    display: block;
+    margin: 0 auto;
+    text-align:  center;
+    background-image: url("../../../assets/loading.gif");
+
+
+}

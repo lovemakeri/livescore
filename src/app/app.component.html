@@ -3,71 +3,11 @@
   <h1>
      {{title}}
   </h1>
+
+  <app-search-form></app-search-form>
  
-  <form [formGroup]="todo" (ngSubmit)="searchForm()">
+  <app-searches></app-searches>
 
-        
-<div class="date">
-      <label>Date from</label> <input type="date" [(ngModel)]="match_date_from" formControlName="match_date_from" id="match_date_from" name = "match_date_from" >
-      </div>
-      <div class="date">
-      <label>Date to</label> <input type="date" [(ngModel)]="match_date_to" formControlName="match_date_to" id="match_date_to" name = "match_date_to">
-</div>
-   
-      <div *ngIf="countries"  class="countries">
-      <label>Select country</label> 
-      <select #C [(ngModel)]="country" formControlName="country" id="country" name="country" class="country" (change)="onSelectCountry(C.value)">
-          <!--option value="0"  selected="selected">Select country</option-->
-          <option *ngFor="let country of countries" [value]="country.country_id" >{{country.country_name}}</option>
-      </select>
-      </div>
-
-      <div *ngIf="leagues"   class="leagues">
-          <label>Select league</label> 
-          <select #C [(ngModel)]="myLeague" formControlName="league" id="league" name="league" class="league" (change)="onSelectLeague(C.value)">
-                <!--option value="0" selected="selected">Select league</option-->
-              <option *ngFor="let league of leagues" [value]="league.league_id" >{{league.league_name}}</option>
-          </select>
-          </div>
-
-    <button type="submit">Search</button>
-    <div class="clr"></div>
-    </form>
-<div  class="searches">
-
-
-        <div class="search-tabs">
-                <div *ngFor="let search of searches" class="searchTab" [class.selected]="search === selectedSearch" (click)="showSearch(search)" >Search {{search.time}}</div>
-                <div class="clr"></div>
-                </div>
-
-                <div *ngIf="isRequesting" class="spinner"></div>
-                
-
-   <table *ngIf="!selectedSearch"  class="events-search">
-      <tr class="event-header"><th>Country name</th>    <th>League name</th> <th>Home team</th> <th>Away team</th>  <th>Home/Away score</th> <th>Match status</th> 
-      <th>Match date</th><th>Match time</th>
-      </tr>
-       </table> 
-
-       <table *ngIf="selectedSearch"  class="events-search">
-          <tr class="event-header"><th>Country name</th>    <th>League name</th> <th>Home team</th> <th>Away team</th>  <th>Home/Away score</th> <th>Match status</th> 
-          <th>Match date</th><th>Match time</th>
-          </tr>
-          
-      <tr *ngFor="let event of selectedSearch.events" class="event">
-          <td>{{event.country_name}}</td>    <td>{{event.league_name}}</td> <td>{{event.match_hometeam_name}}</td> 
-          <td>{{event.match_awayteam_name}}</td> 
-          <td>{{event.match_hometeam_score}}/{{event.match_awayteam_score}}</td>  <td>{{event.match_status}}</td> <td>{{event.match_date}}</td> 
-          <td>{{event.match_time}}</td>
-</tr>
-     </table>
-
-    
-      
-
-
-</div>
 
 </div>
 

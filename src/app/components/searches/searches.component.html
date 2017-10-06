@@ -1,0 +1,35 @@
+<div *ngIf="isRequesting" class="spinner"></div>
+
+<div  class="searches" *ngIf='searches'>
+  
+  
+          <div class="search-tabs">
+                  <div *ngFor="let search of searches" class="searchTab" [class.selected]="search === selectedSearch" (click)="showSearch(search)" >Search {{search.time}}</div>
+                  <div class="clr"></div>
+                  </div>
+                    
+  
+     <table *ngIf="!selectedSearch"  class="events-search">
+        <tr class="event-header"><th>Country name</th>    <th>League name</th> <th>Home team</th> <th>Away team</th>  <th>Home/Away score</th> <th>Match status</th> 
+        <th>Match date</th><th>Match time</th>
+        </tr>
+         </table> 
+  
+         <table *ngIf="selectedSearch"  class="events-search">
+            <tr class="event-header"><th>Country name</th>    <th>League name</th> <th>Home team</th> <th>Away team</th>  <th>Home/Away score</th> <th>Match status</th> 
+            <th>Match date</th><th>Match time</th>
+            </tr>
+            
+        <tr *ngFor="let event of selectedSearch.events" class="event">
+            <td>{{event.country_name}}</td>    <td>{{event.league_name}}</td> <td>{{event.match_hometeam_name}}</td> 
+            <td>{{event.match_awayteam_name}}</td> 
+            <td>{{event.match_hometeam_score}}/{{event.match_awayteam_score}}</td>  <td>{{event.match_status}}</td> <td>{{event.match_date}}</td> 
+            <td>{{event.match_time}}</td>
+  </tr>
+       </table>
+  
+      
+        
+  
+  
+  </div>

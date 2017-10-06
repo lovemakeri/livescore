@@ -3,9 +3,10 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { League } from './../classes/league';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+/* import { League } from './../classes/league';
 import { Event } from './../classes/event';
-import { Country } from './../classes/country';
+ import { Country } from './../classes/country'; */
 
 const APIkey = 'ef8c3e1b38a74d496702d088aed911fd02757ff9899cd58fece0ba62cd9b52f2';
 
@@ -17,19 +18,35 @@ const urlEvent : string = 'https://apifootball.com/api/?action=get_events';
 
 
 @Injectable()
-export class ApiService {
+export class ApiService  {
 
   leagues : League[];
   events : Event[];
 
+  public selectedSearch : Search;
+  public searches : Search[];
+
+defaultData : DataToComponent = {
+  date_from: '01-01-2016',
+  date_to: '01-01-2017',
+  league: 0
+};
+
+  private searchSource = new BehaviorSubject<DataToComponent>(this.defaultData);
+
+  currentSearch = this.searchSource.asObservable();
+
   constructor(private http: Http) { }
 
+  addData(newData: DataToComponent) : void
+  {
+    this.searchSource.next(newData);
+  }
 
   getCountries(): Observable<Country[]> {
  
        let myUrl = urlCountry + '&APIkey=' + APIkey;
-     
-    
+      
      return this.http.get(myUrl)
       
         .map((res:Response) => res.json())
@@ -41,32 +58,14 @@ export class ApiService {
      getLeagues(country_id): Observable<League[]> {
       
           let myUrl = urlLeague + '&country_id=' + country_id +'&APIkey=' + APIkey;
-      
-             
+                 
           return this.http.get(myUrl)
           
            .map((res:Response) => res.json())
           
            .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-        
-      
-        
+       
         }
-
-        getNewEvents(from, to, league_id): Observable<Event[]> {
-          
-          let myUrl = urlEvent + '&from='+from + '&to='+ to + '&league_id' + league_id +'&APIkey=' + APIkey;
-          
-                 
-              return this.http.get(myUrl)
-              
-               .map((res:Response) => res.json())
-               
-               .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-            
-          
-            
-            }
 
         getEvents(from, to, league_id): Promise<Event[]> {
           
@@ -94,79 +93,46 @@ export class ApiService {
         
         }
 
+}
 
-        getDate() : string
-        {
-        
-        var today = new Date();
-      var dd = today.getDate();
-      
-      var mm = today.getMonth()+1; //January is 0!
-      
-      var yyyy = today.getFullYear();
-      
-      var todayDate = yyyy + '-' + mm + '-' + dd;
-      
-      if(dd<10) {
-      var dd1 = '0'+dd;
-      todayDate = yyyy + '-' + mm + '-' + dd1;
-      } 
-      
-      if(mm<10) {
-      var mm1 = '0'+mm;
-      todayDate = yyyy + '-' + mm1 + '-' + dd;
-      } 
-      
-      if((mm<10)&&(dd<10)) {
-      todayDate = yyyy + '-' + mm1 + '-' + dd1;
-      }
-      
-      return todayDate;
-      }
-      
-      
-      getTime() : string
-      {
-      
-      var today = new Date();
-      var hh = today.getHours();
-      
-      var mm = today.getMinutes(); 
-      
-      var ss = today.getSeconds();
-      
-      var time = hh + ':' + mm + ':' + ss;
-      
-      if(hh<10) {
-      var hh1 = '0'+hh;
-      time = hh1 + ':' + mm + ':' + ss;
-      } 
-      
-      if(mm<10) {
-      var mm1 = '0'+mm;
-      time = hh + ':' + mm1 + ':' + ss;
-      } 
-      
-      if(ss<10) {
-        var ss1 = '0'+ss;
-        time = hh + ':' + mm + ':' + ss1;
-        } 
-      
-      if((mm<10)&&(ss<10)) {
-      time = hh + ':' + mm1 + ':' + ss1;
-      }
-      
-      if((hh<10)&&(mm<10)) {
-        time = hh1 + ':' + mm1 + ':' + ss;
-        }
-      
-      
-      if((hh<10)&&(ss<10)) {
-        time = hh1 + ':' + mm + ':' + ss1;
-        }
-      
-      return time;
-      }
+export interface Country {
+  country_id: number;
+  country_name: string;
+}
 
+export interface League {
+  country_id: number;
+  country_name: string;
+  league_id: number;
+  league_name: string;
+}
 
+export interface Event {
+  match_id: number;
+  country_id: number;
+  country_name: string;
+  league_id: number;
+  league_name: string;
+  match_date: string;
+  match_status: string;
+  match_time: string;
+  match_hometeam_name: string;
+  match_hometeam_score: number;
+  match_awayteam_name: string;
+  match_awayteam_score: number;
+  match_hometeam_halftime_score: number;
+  match_awayteam_halftime_score: number;
+  match_live: number;         
+}
+
+export interface Search {
+  id: number;
+  time: string;
+  events: Event[];
+}
+
+export interface DataToComponent {
+  date_from: string;
+  date_to: string;
+  league: number;
 }
